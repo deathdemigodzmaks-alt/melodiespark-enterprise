@@ -1,0 +1,21 @@
+{
+  "vercel": {
+    "caching": {
+      "maxAge": 31536000,
+      "staleWhileRevalidate": 86400
+    },
+    "compressionLevel": 9,
+    "bundleAnalysis": true
+  },
+  "railway": {
+    "cpu": "1",
+    "memory": "512MB",
+    "autoScale": {
+      "enabled": true,
+      "minReplicas": 1,
+      "maxReplicas": 5,
+      "targetCPU": 70,
+      "targetMemory": 80
+    }
+  }
+}

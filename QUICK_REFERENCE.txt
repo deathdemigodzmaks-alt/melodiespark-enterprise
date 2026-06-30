@@ -1,0 +1,144 @@
+═══════════════════════════════════════════════════════════════════════════════
+ MELODIESPARK — DOCKER & DEPLOYMENT QUICK REFERENCE
+═══════════════════════════════════════════════════════════════════════════════
+
+📍 LOCAL DEVELOPMENT (Right Now)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Copy environment:
+   cp .env.example .env
+
+2. Start all services:
+   docker-compose up -d
+
+3. Check status:
+   docker-compose ps
+
+4. View logs:
+   docker-compose logs -f
+
+5. Access services:
+   Frontend:    http://localhost:3000
+   API:         http://localhost:3001
+   API Health:  http://localhost:3001/health
+   Database:    localhost:5432
+   Redis:       localhost:6379
+
+6. Stop:
+   docker-compose down
+
+
+🚀 DEPLOY TO PRODUCTION (Choose One)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPTION A: Vercel + Railway (Recommended) ⭐
+  Cost:  $25-50/month
+  Time:  15 min
+  
+  1. Push to GitHub
+  2. vercel.com → Import repo → apps/web → Deploy
+  3. railway.app → Import repo → apps/api → Deploy
+  4. Update env vars in both platforms
+  5. Done!
+
+OPTION B: Single VPS (DigitalOcean/Linode)
+  Cost:  $6-20/month
+  Time:  30 min
+  
+  1. Provision Ubuntu VPS with Docker
+  2. Clone repo
+  3. cp .env.example .env
+  4. docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+  5. Setup Nginx + SSL (see DEPLOYMENT_GUIDE.md)
+  6. Done!
+
+OPTION C: Kubernetes
+  Cost:  $50+/month
+  Time:  2+ hours
+  
+  See DEPLOYMENT_GUIDE.md for Kubernetes setup
+
+
+🐳 DOCKER COMMANDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Build:
+  docker-compose build              # All services
+  docker-compose build api          # Specific service
+  docker-compose build --no-cache   # Force rebuild
+
+Run:
+  docker-compose up -d              # Start (background)
+  docker-compose up                 # Start (show logs)
+  docker-compose up api web         # Specific services
+
+Logs:
+  docker-compose logs -f            # All services
+  docker-compose logs -f api        # Specific service
+  docker-compose logs --tail=100    # Last 100 lines
+
+Stop:
+  docker-compose down               # Stop all
+  docker-compose down -v            # Stop + remove volumes
+  docker-compose restart api        # Restart service
+
+Manage:
+  docker-compose ps                 # List services
+  docker-compose exec api pnpm build
+  docker-compose pull               # Pull latest images
+
+Clean:
+  docker system prune               # Remove unused
+  docker system df                  # Disk usage
+
+
+📁 KEY FILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+docker-compose.yml           → Local development stack
+docker-compose.prod.yml      → Production overrides
+.env.example                 → Environment template
+apps/api/Dockerfile          → API container
+apps/web/Dockerfile          → Frontend container
+DEPLOYMENT_GUIDE.md          → Full deployment docs
+DOCKER_SETUP_COMPLETE.md     → Complete reference
+
+
+🔧 TROUBLESHOOTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Won't start?
+  → Check logs: docker-compose logs
+  → Rebuild: docker-compose build --no-cache
+  → Full reset: docker-compose down -v && docker-compose up -d
+
+Port in use?
+  → Change docker-compose.yml ports section
+  → Or: docker stop <container-name>
+
+Database not ready?
+  → Wait for healthcheck: docker-compose ps
+  → Check: docker-compose exec postgres psql -U melodiespark
+
+Build fails?
+  → docker-compose build api 2>&1 | grep ERROR
+  → Read full output above the error
+
+
+📞 HELP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Read full docs:
+  → DEPLOYMENT_GUIDE.md      (all deployment options)
+  → DOCKER_SETUP_COMPLETE.md (complete reference)
+
+Docker docs:         https://docs.docker.com/
+Next.js docs:        https://nextjs.org/docs
+Fastify docs:        https://www.fastify.io/docs/
+Vercel docs:         https://vercel.com/docs
+Railway docs:        https://railway.app/docs
+
+
+═══════════════════════════════════════════════════════════════════════════════
+Status: ✅ PRODUCTION READY
+═══════════════════════════════════════════════════════════════════════════════

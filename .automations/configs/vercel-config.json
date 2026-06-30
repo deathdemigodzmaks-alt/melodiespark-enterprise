@@ -1,0 +1,18 @@
+{
+  "buildCommand": "cd MelodieSpark/apps/web && pnpm run build",
+  "outputDirectory": ".next",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "nodeVersion": "20.x",
+  "env": {
+    "NEXT_PUBLIC_API_URL": {
+      "production": "@railway_api_url"
+    }
+  },
+  "regions": ["sfo1"],
+  "buildOutput": "web",
+  "publicSource": true,
+  "analytics": true,
+  "protected": false,
+  "autoExposeSystemEnvs": false
+}

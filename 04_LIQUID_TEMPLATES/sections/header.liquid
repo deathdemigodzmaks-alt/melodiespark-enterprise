@@ -1,0 +1,148 @@
+<header class="site-header" data-section-id="{{ section.id }}">
+  <div class="header-container">
+    <div class="header-logo">
+      <a href="{{ routes.root_url }}" class="logo-link">
+        {% if section.settings.logo != blank %}
+          {{
+            section.settings.logo
+            | image_url: width: section.settings.logo_width
+            | image_tag:
+              class: 'logo-image',
+              alt: shop.name,
+              width: section.settings.logo_width
+          }}
+        {% else %}
+          <span class="logo-text">{{ shop.name }}</span>
+        {% endif %}
+      </a>
+    </div>
+
+    <nav class="header-navigation">
+      <ul class="nav-menu">
+        {%- for link in section.settings.menu.links -%}
+          <li class="nav-item">
+            {%- if link.links != blank -%}
+              <div class="nav-dropdown">
+                <button class="nav-link dropdown-toggle" aria-expanded="false">
+                  {{ link.title }}
+                  <span class="dropdown-icon">▼</span>
+                </button>
+                <ul class="dropdown-menu">
+                  {%- for child_link in link.links -%}
+                    <li>
+                      <a href="{{ child_link.url }}" class="dropdown-link">
+                        {{ child_link.title }}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- else -%}
+              <a href="{{ link.url }}" class="nav-link">
+                {{ link.title }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <!-- Search -->
+      <button class="header-icon search-toggle" aria-label="{{ 'general.search.title' | t }}">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </button>
+
+      <!-- Account -->
+      <a href="{{ routes.account_url }}" class="header-icon account-link" aria-label="{{ 'customer.account.title' | t }}">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </a>
+
+      <!-- Karma Points -->
+      {% if settings.enable_karma_widget %}
+        <div class="header-karma">
+          <span class="karma-icon">✨</span>
+          <span class="karma-count" id="header-karma-count">0</span>
+        </div>
+      {% endif %}
+
+      <!-- Cart -->
+      <a href="{{ routes.cart_url }}" class="header-icon cart-link" aria-label="{{ 'cart.general.title' | t }}">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-count" data-cart-count>{{ cart.item_count }}</span>
+      </a>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="header-icon mobile-menu-toggle" aria-label="{{ 'general.menu' | t }}">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Crypto Price Ticker -->
+  {% if settings.enable_crypto_prices %}
+    <div class="crypto-ticker">
+      <div class="ticker-item">
+        <span class="ticker-symbol">BTC</span>
+        <span class="ticker-price" id="btc-price">Loading...</span>
+      </div>
+      <div class="ticker-item">
+        <span class="ticker-symbol">ETH</span>
+        <span class="ticker-price" id="eth-price">Loading...</span>
+      </div>
+      <div class="ticker-item">
+        <span class="ticker-symbol">MELD</span>
+        <span class="ticker-price" id="meld-price">Loading...</span>
+      </div>
+    </div>
+  {% endif %}
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 250,
+      "step": 10,
+      "default": 100,
+      "unit": "px",
+      "label": "Logo width"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_crypto_ticker",
+      "label": "Show crypto price ticker",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

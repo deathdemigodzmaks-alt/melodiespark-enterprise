@@ -1,0 +1,217 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "MelodieSpark",
+    "theme_version": "1.0.0",
+    "theme_author": "MelodieSpark",
+    "theme_documentation_url": "https://docs.melodiespark.com",
+    "theme_support_url": "https://support.melodiespark.com"
+  },
+  {
+    "name": "Logo",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "min": 50,
+        "max": 250,
+        "step": 10,
+        "default": 100,
+        "unit": "px",
+        "label": "Logo width"
+      }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary color",
+        "default": "#1a1a1a"
+      },
+      {
+        "type": "color",
+        "id": "color_secondary",
+        "label": "Secondary color",
+        "default": "#6366f1"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent color",
+        "default": "#10b981"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background color",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text color",
+        "default": "#1a1a1a"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "heading_font",
+        "label": "Heading font",
+        "default": "helvetica_narrow"
+      },
+      {
+        "type": "font_picker",
+        "id": "body_font",
+        "label": "Body font",
+        "default": "helvetica_narrow"
+      }
+    ]
+  },
+  {
+    "name": "Payment Settings",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Stripe Integration"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_stripe_elements",
+        "label": "Enable Stripe Elements",
+        "default": true,
+        "info": "Enable Stripe for credit card payments"
+      },
+      {
+        "type": "text",
+        "id": "stripe_publishable_key",
+        "label": "Stripe Publishable Key",
+        "default": "",
+        "info": "Your Stripe publishable API key"
+      },
+      {
+        "type": "header",
+        "content": "Crypto Payments"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_crypto_checkout",
+        "label": "Enable Crypto Checkout",
+        "default": true,
+        "info": "Enable cryptocurrency payments via Coinbase Commerce"
+      },
+      {
+        "type": "text",
+        "id": "coinbase_commerce_key",
+        "label": "Coinbase Commerce API Key",
+        "default": "",
+        "info": "Your Coinbase Commerce API key"
+      },
+      {
+        "type": "text",
+        "id": "walletconnect_project_id",
+        "label": "WalletConnect Project ID",
+        "default": "",
+        "info": "Your WalletConnect project ID for wallet payments"
+      }
+    ]
+  },
+  {
+    "name": "Crypto Features",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_crypto_prices",
+        "label": "Show Crypto Prices",
+        "default": true,
+        "info": "Display product prices in BTC and ETH"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_karma_widget",
+        "label": "Enable Karma Widget",
+        "default": true,
+        "info": "Display customer karma points"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_bot_performance",
+        "label": "Enable Bot Performance Widget",
+        "default": true,
+        "info": "Display live trading bot performance"
+      }
+    ]
+  },
+  {
+    "name": "Karma Rewards",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_karma_rewards",
+        "label": "Enable Karma Rewards",
+        "default": true,
+        "info": "Reward customers with karma points for purchases"
+      },
+      {
+        "type": "range",
+        "id": "karma_multiplier",
+        "min": 1,
+        "max": 10,
+        "step": 1,
+        "default": 1,
+        "label": "Karma Points Multiplier"
+      }
+    ]
+  },
+  {
+    "name": "Social Media",
+    "settings": [
+      {
+        "type": "url",
+        "id": "social_twitter",
+        "label": "Twitter"
+      },
+      {
+        "type": "url",
+        "id": "social_facebook",
+        "label": "Facebook"
+      },
+      {
+        "type": "url",
+        "id": "social_instagram",
+        "label": "Instagram"
+      },
+      {
+        "type": "url",
+        "id": "social_discord",
+        "label": "Discord"
+      },
+      {
+        "type": "url",
+        "id": "social_telegram",
+        "label": "Telegram"
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon"
+      }
+    ]
+  }
+]

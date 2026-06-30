@@ -1,0 +1,14 @@
+{
+  "rollback": {
+    "automatic": false,
+    "on_health_check_failure": false,
+    "on_deployment_error": true,
+    "max_rollback_age": 86400,
+    "keep_versions": 5
+  },
+  "notification": {
+    "slack": true,
+    "email": true,
+    "pagerduty": false
+  }
+}

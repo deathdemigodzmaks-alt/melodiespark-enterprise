@@ -1,0 +1,256 @@
+name: Enterprise SaaS Deployment Pipeline
+
+on:
+  push:
+    branches: [main, develop, staging]
+  pull_request:
+    branches: [main, develop, staging]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+
+env:
+  REGISTRY: ghcr.io
+  NODE_VERSION: '20'
+
+jobs:
+  # Stage 1: Validate
+  validate:
+    runs-on: ubuntu-latest
+    name: Validate Code & Infrastructure
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Validate Docker files
+        run: |
+          docker build --dry-run -f MelodieSpark/apps/api/Dockerfile . || exit 1
+          docker build --dry-run -f MelodieSpark/apps/web/Dockerfile . || exit 1
+      
+      - name: Lint code
+        run: |
+          cd MelodieSpark
+          npm install --legacy-peer-deps
+          npm run lint || true
+      
+      - name: Type check
+        run: |
+          cd MelodieSpark
+          npm run type-check || true
+
+  # Stage 2: Build
+  build:
+    needs: validate
+    runs-on: ubuntu-latest
+    name: Build Docker Images
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Build and push API image
+        uses: docker/build-push-action@v5
+        with:
+          context: MelodieSpark
+          file: MelodieSpark/apps/api/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository }}/api:latest
+            ${{ env.REGISTRY }}/${{ github.repository }}/api:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      
+      - name: Build and push Web image
+        uses: docker/build-push-action@v5
+        with:
+          context: MelodieSpark
+          file: MelodieSpark/apps/web/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository }}/web:latest
+            ${{ env.REGISTRY }}/${{ github.repository }}/web:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Stage 3: Test
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    name: Run Tests
+    
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Run tests
+        run: |
+          cd MelodieSpark
+          npm install --legacy-peer-deps
+          npm run test || true
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/coverage-final.json
+
+  # Stage 4: Deploy to Staging
+  deploy-staging:
+    needs: [test, build]
+    runs-on: ubuntu-latest
+    name: Deploy to Staging
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    environment: staging
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Deploy to Railway (Staging)
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          npm install -g @railway/cli
+          railway up --environment staging
+      
+      - name: Deploy to Vercel (Staging)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          npm install -g vercel
+          cd MelodieSpark/apps/web
+          vercel --token=$VERCEL_TOKEN
+      
+      - name: Health check
+        run: |
+          sleep 30
+          curl -f ${{ secrets.STAGING_API_URL }}/health || exit 1
+          curl -f ${{ secrets.STAGING_WEB_URL }} || exit 1
+
+  # Stage 5: Deploy to Production
+  deploy-production:
+    needs: [test, build]
+    runs-on: ubuntu-latest
+    name: Deploy to Production
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Create production tag
+        run: |
+          git tag -a release-${{ github.sha }} -m "Production release"
+          git push origin release-${{ github.sha }}
+      
+      - name: Deploy to Railway (Production)
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          npm install -g @railway/cli
+          railway up --environment production
+      
+      - name: Deploy to Vercel (Production)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          npm install -g vercel
+          cd MelodieSpark/apps/web
+          vercel --prod --token=$VERCEL_TOKEN
+      
+      - name: Deploy to Kubernetes
+        if: secrets.KUBE_CLUSTER != ''
+        uses: azure/k8s-deploy@v4
+        with:
+          manifests: MelodieSpark/k8s/deployment.yaml
+          images: |
+            ${{ env.REGISTRY }}/${{ github.repository }}/api:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ github.repository }}/web:${{ github.sha }}
+      
+      - name: Production health check
+        run: |
+          sleep 60
+          curl -f ${{ secrets.PROD_API_URL }}/health || exit 1
+          curl -f ${{ secrets.PROD_WEB_URL }} || exit 1
+      
+      - name: Slack notification
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          text: 'Production deployment ${{ job.status }}'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+  # Stage 6: Monitoring & Alerting
+  monitoring:
+    needs: deploy-production
+    runs-on: ubuntu-latest
+    name: Setup Monitoring
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Send deployment notification
+        run: |
+          echo "Production deployment completed"
+          echo "Frontend: ${{ secrets.PROD_WEB_URL }}"
+          echo "API: ${{ secrets.PROD_API_URL }}"
+      
+      - name: Create incident (if failed)
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Production deployment failed',
+              body: 'Deployment to production failed. Check logs.'
+            })

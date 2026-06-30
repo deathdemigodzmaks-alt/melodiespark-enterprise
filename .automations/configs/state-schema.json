@@ -1,0 +1,20 @@
+{
+  "deployment": {
+    "vercel_url": "string",
+    "railway_url": "string",
+    "deployed_at": "timestamp",
+    "deployed_by": "string",
+    "commit_hash": "string"
+  },
+  "services": {
+    "api_status": "online|offline|degraded",
+    "frontend_status": "online|offline|degraded",
+    "database_status": "online|offline",
+    "cache_status": "online|offline"
+  },
+  "monitoring": {
+    "last_check": "timestamp",
+    "health_score": "0-100",
+    "uptime_percentage": "0-100"
+  }
+}

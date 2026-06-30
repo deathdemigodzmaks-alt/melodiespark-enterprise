@@ -1,0 +1,135 @@
+<div class="karma-widget" data-section-id="{{ section.id }}">
+  <div class="karma-widget-header">
+    <h3>{{ section.settings.title }}</h3>
+    <div class="karma-balance">
+      <span class="karma-icon">✨</span>
+      <span class="karma-amount" id="karma-balance-amount">0</span>
+      <span class="karma-currency">PHNX</span>
+    </div>
+  </div>
+
+  <div class="karma-widget-content">
+    <div class="karma-level">
+      <div class="level-bar">
+        <div class="level-progress" id="karma-level-progress" style="width: 0%"></div>
+      </div>
+      <span class="level-text" id="karma-level-text">Level 1</span>
+    </div>
+
+    <div class="karma-actions">
+      <button class="karma-action-btn" id="karma-earn-btn">
+        <span class="btn-icon">🎁</span>
+        <span class="btn-text">Earn Karma</span>
+      </button>
+      <button class="karma-action-btn" id="karma-redeem-btn">
+        <span class="btn-icon">🛍️</span>
+        <span class="btn-text">Redeem</span>
+      </button>
+    </div>
+
+    <div class="karma-rewards" id="karma-rewards-list">
+      <div class="reward-item">
+        <span class="reward-name">10% Discount</span>
+        <span class="reward-cost">100 PHNX</span>
+      </div>
+      <div class="reward-item">
+        <span class="reward-name">Free Shipping</span>
+        <span class="reward-cost">50 PHNX</span>
+      </div>
+      <div class="reward-item">
+        <span class="reward-name">Exclusive Access</span>
+        <span class="reward-cost">500 PHNX</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Karma Widget Logic
+  document.addEventListener('DOMContentLoaded', function() {
+    const karmaWidget = document.querySelector('.karma-widget');
+    if (!karmaWidget) return;
+
+    // Load karma balance from customer metafield or localStorage
+    function loadKarmaBalance() {
+      const balance = localStorage.getItem('karmaBalance') || 0;
+      document.getElementById('karma-balance-amount').textContent = balance;
+      updateKarmaLevel(parseInt(balance));
+    }
+
+    function updateKarmaLevel(balance) {
+      const levels = [
+        { threshold: 0, name: 'Novice' },
+        { threshold: 100, name: 'Apprentice' },
+        { threshold: 500, name: 'Adept' },
+        { threshold: 1000, name: 'Expert' },
+        { threshold: 5000, name: 'Master' },
+        { threshold: 10000, name: 'Grandmaster' }
+      ];
+
+      let currentLevel = levels[0];
+      let nextLevel = levels[1];
+
+      for (let i = 0; i < levels.length; i++) {
+        if (balance >= levels[i].threshold) {
+          currentLevel = levels[i];
+          nextLevel = levels[i + 1] || levels[i];
+        }
+      }
+
+      document.getElementById('karma-level-text').textContent = currentLevel.name;
+
+      if (nextLevel) {
+        const progress = ((balance - currentLevel.threshold) / (nextLevel.threshold - currentLevel.threshold)) * 100;
+        document.getElementById('karma-level-progress').style.width = progress + '%';
+      }
+    }
+
+    // Earn karma (good deeds)
+    document.getElementById('karma-earn-btn').addEventListener('click', function() {
+      // In production, this would integrate with GoodDeedOracle smart contract
+      const earned = Math.floor(Math.random() * 10) + 1;
+      const currentBalance = parseInt(localStorage.getItem('karmaBalance') || 0);
+      const newBalance = currentBalance + earned;
+      localStorage.setItem('karmaBalance', newBalance);
+      loadKarmaBalance();
+      alert(`You earned ${earned} PHNX karma points!`);
+    });
+
+    // Redeem karma
+    document.getElementById('karma-redeem-btn').addEventListener('click', function() {
+      alert('Redemption options coming soon!');
+    });
+
+    // Initial load
+    loadKarmaBalance();
+
+    // Poll for balance updates (in production, use WebSocket)
+    setInterval(loadKarmaBalance, 30000);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Karma Widget",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Widget Title",
+      "default": "Your Karma"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rewards",
+      "label": "Show Rewards",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Karma Widget"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,41 @@
+{
+  "healthChecks": [
+    {
+      "name": "API Health",
+      "url": "/health",
+      "interval": 300,
+      "timeout": 10,
+      "alert": true
+    },
+    {
+      "name": "Frontend",
+      "url": "/",
+      "interval": 600,
+      "timeout": 10,
+      "alert": false
+    },
+    {
+      "name": "Database",
+      "type": "ping",
+      "interval": 300,
+      "alert": true
+    }
+  ],
+  "alerts": [
+    {
+      "type": "email",
+      "to": "admin@melodiespark.com",
+      "onFailure": true
+    },
+    {
+      "type": "slack",
+      "webhook": "@slack_webhook_url",
+      "onFailure": true
+    }
+  ],
+  "retention": {
+    "logs": 30,
+    "metrics": 90,
+    "backups": 7
+  }
+}

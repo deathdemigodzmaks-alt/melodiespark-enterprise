@@ -1,0 +1,108 @@
+version: '3.9'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: melodiespark-postgres
+    environment:
+      POSTGRES_USER: melodiespark
+      POSTGRES_PASSWORD: dev-password-change-in-prod
+      POSTGRES_DB: melodiespark
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U melodiespark"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - melodiespark
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: melodiespark-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - melodiespark
+
+  # Qdrant Vector Search
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: melodiespark-qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT_API_KEY=dev-api-key
+    networks:
+      - melodiespark
+
+  # Fastify API
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: melodiespark-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://melodiespark:[REDACTED]@postgres:5432/melodiespark
+      REDIS_URL: redis://redis:6379
+      QDRANT_URL: http://qdrant:6333
+      JWT_SECRET: dev-jwt-secret-key-change-in-prod
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./apps/api/src:/app/src
+    networks:
+      - melodiespark
+    restart: unless-stopped
+
+  # Next.js Frontend
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: melodiespark-web
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    volumes:
+      - ./apps/web:/app
+      - /app/.next
+      - /app/node_modules
+    networks:
+      - melodiespark
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  qdrant_data:
+
+networks:
+  melodiespark:
+    driver: bridge

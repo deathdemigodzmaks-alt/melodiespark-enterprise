@@ -1,0 +1,313 @@
+# Validator Mastery Course Curriculum
+# 120-hour comprehensive blockchain validator training course
+
+course:
+  id: validator-mastery
+  title: "Validator Mastery: Become a Blockchain Validator"
+  description: "Comprehensive 120-hour course on becoming a blockchain validator. Covers staking, security, node operations, and governance across multiple chains."
+  duration: 120
+  price: 2997
+  currency: USD
+  level: intermediate
+  prerequisites:
+    - "Basic understanding of blockchain technology"
+    - "Familiarity with command line interface"
+    - "Basic Linux system administration"
+  learning_objectives:
+    - "Set up and maintain validator nodes on major blockchains"
+    - "Understand staking mechanics and reward structures"
+    - "Implement security best practices for validators"
+    - "Participate in on-chain governance"
+    - "Handle slashing conditions and risk management"
+    - "Optimize node performance and uptime"
+
+modules:
+  - id: module-1
+    title: "Blockchain Fundamentals for Validators"
+    duration: 15
+    lessons:
+      - id: l1-1
+        title: "Introduction to Proof of Stake"
+        duration: 2
+        type: video
+        topics:
+          - "PoS vs PoW comparison"
+          - "Validator role in PoS"
+          - "Staking mechanics"
+      - id: l1-2
+        title: "Major PoS Blockchains Overview"
+        duration: 3
+        type: video
+        topics:
+          - "Ethereum 2.0"
+          - "Solana"
+          - "Polkadot"
+          - "Cosmos ecosystem"
+      - id: l1-3
+        title: "Validator Economics"
+        duration: 3
+        type: video
+        topics:
+          - "Reward calculation"
+          - "Inflation and issuance"
+          - "Fee distribution"
+      - id: l1-4
+        title: "Lab: Environment Setup"
+        duration: 7
+        type: lab
+        topics:
+          - "Linux server setup"
+          - "Docker installation"
+          - "Monitoring tools setup"
+
+  - id: module-2
+    title: "Ethereum Validator Operations"
+    duration: 20
+    lessons:
+      - id: l2-1
+        title: "Ethereum Consensus Layer"
+        duration: 4
+        type: video
+        topics:
+          - "Beacon chain architecture"
+          - "Validator responsibilities"
+          - "Epoch and slot mechanics"
+      - id: l2-2
+        title: "Running an Ethereum Validator"
+        duration: 5
+        type: video
+        topics:
+          - "Prysm client setup"
+          - "Lighthouse client setup"
+          - "Teku client setup"
+      - id: l2-3
+        title: "Staking on Ethereum"
+        duration: 3
+        type: video
+        topics:
+          - "32 ETH requirement"
+          - "Staking deposit contract"
+          - "Validator key generation"
+      - id: l2-4
+        title: "Lab: Ethereum Validator Setup"
+        duration: 8
+        type: lab
+        topics:
+          - "Full node deployment"
+          - "Validator client configuration"
+          - "Testnet practice"
+
+  - id: module-3
+    title: "Solana Validator Operations"
+    duration: 18
+    lessons:
+      - id: l3-1
+        title: "Solana Architecture"
+        duration: 4
+        type: video
+        topics:
+          - "Proof of History"
+          - "Leader schedule"
+          - "Validator voting"
+      - id: l3-2
+        title: "Running a Solana Validator"
+        duration: 5
+        type: video
+        topics:
+          - "Hardware requirements"
+          - "Solana CLI setup"
+          - "Vote account setup"
+      - id: l3-3
+        title: "Solana Staking and Delegation"
+        duration: 3
+        type: video
+        topics:
+          - "SOL staking"
+          - "Delegation mechanics"
+          - "Reward calculation"
+      - id: l3-4
+        title: "Lab: Solana Validator Setup"
+        duration: 6
+        type: lab
+        topics:
+          - "Validator node deployment"
+          - "Vote account configuration"
+          - "Performance tuning"
+
+  - id: module-4
+    title: "Polkadot & Cosmos Validators"
+    duration: 18
+    lessons:
+      - id: l4-1
+        title: "Polkadot NPoS"
+        duration: 4
+        type: video
+        topics:
+          - "Nominated Proof of Stake"
+          - "Validator selection"
+          - "DOT staking"
+      - id: l4-2
+        title: "Cosmos Proof of Stake"
+        duration: 4
+        type: video
+        topics:
+          - "Bonded validators"
+          - "ATOM staking"
+          - "Governance participation"
+      - id: l4-3
+        title: "Running Polkadot/Cosmos Validators"
+        duration: 4
+        type: video
+        topics:
+          - "Polkadot node setup"
+          - "Cosmos node setup"
+          - "Key management"
+      - id: l4-4
+        title: "Lab: Multi-Chain Validator"
+        duration: 6
+        type: lab
+        topics:
+          - "Polkadot validator deployment"
+          - "Cosmos validator deployment"
+          - "Cross-chain monitoring"
+
+  - id: module-5
+    title: "Validator Security"
+    duration: 20
+    lessons:
+      - id: l5-1
+        title: "Key Management"
+        duration: 4
+        type: video
+        topics:
+          - "Hot vs cold keys"
+          - "Hardware wallets"
+          - "Key rotation procedures"
+      - id: l5-2
+        title: "Node Security"
+        duration: 4
+        type: video
+        topics:
+          - "Firewall configuration"
+          - "DDoS protection"
+          - "Secure communication"
+      - id: l5-3
+        title: "Slashing Protection"
+        duration: 4
+        type: video
+        topics:
+          - "Slashing conditions"
+          - "Double-signing prevention"
+          - "Downtime penalties"
+      - id: l5-4
+        title: "Lab: Security Hardening"
+        duration: 8
+        type: lab
+        topics:
+          - "Security audit"
+          - "Penetration testing"
+          - "Incident response"
+
+  - id: module-6
+    title: "Monitoring & Performance"
+    duration: 17
+    lessons:
+      - id: l6-1
+        title: "Metrics Collection"
+        duration: 4
+        type: video
+        topics:
+          - "Prometheus setup"
+          - "Grafana dashboards"
+          - "Key validator metrics"
+      - id: l6-2
+        title: "Alerting Systems"
+        duration: 3
+        type: video
+        topics:
+          - "Alertmanager configuration"
+          - "Critical alerts setup"
+          - "Notification channels"
+      - id: l6-3
+        title: "Performance Optimization"
+        duration: 4
+        type: video
+        topics:
+          - "Hardware optimization"
+          - "Network tuning"
+          - "Client optimization"
+      - id: l6-4
+        title: "Lab: Monitoring Stack"
+        duration: 6
+        type: lab
+        topics:
+          - "Prometheus deployment"
+          - "Grafana dashboard creation"
+          - "Alert configuration"
+
+  - id: module-7
+    title: "Governance & Advanced Topics"
+    duration: 12
+    lessons:
+      - id: l7-1
+        title: "On-Chain Governance"
+        duration: 3
+        type: video
+        topics:
+          - "Governance mechanisms"
+          - "Voting procedures"
+          - "Proposal submission"
+      - id: l7-2
+        title: "Validator Pools"
+        duration: 3
+        type: video
+        topics:
+          - "Staking pool architecture"
+          - "Pool operations"
+          - "Reward distribution"
+      - id: l7-3
+        title: "MEV for Validators"
+        duration: 2
+        type: video
+        topics:
+          - "MEV opportunities"
+          - "MEV-Boost"
+          - "Ethical considerations"
+      - id: l7-4
+        title: "Lab: Governance Participation"
+        duration: 4
+        type: lab
+        topics:
+          - "Governance proposal analysis"
+          - "Voting simulation"
+          - "Pool setup"
+
+assessment:
+  final_exam:
+    duration: 120
+    passing_score: 80
+    questions: 50
+  certification:
+    title: "Certified Blockchain Validator"
+    valid_for: 2
+    requirements:
+      - "Complete all 7 modules"
+      - "Pass final exam with 80%+"
+      - "Submit validator node proof"
+      - "Complete security lab"
+
+resources:
+  documentation:
+    - "Ethereum Validator Documentation"
+    - "Solana Validator Guide"
+    - "Polkadot Wiki"
+    - "Cosmos Documentation"
+  tools:
+    - "Prysm Client"
+    - "Lighthouse Client"
+    - "Solana CLI"
+    - "Polkadot JS"
+  community:
+    - "Ethereum Validators Discord"
+    - "Solana Validators Telegram"
+    - "Polkadot Validators Forum"

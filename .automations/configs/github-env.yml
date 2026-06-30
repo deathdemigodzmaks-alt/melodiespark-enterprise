@@ -1,0 +1,15 @@
+# GitHub Actions Environment Configuration
+
+env:
+  NODE_VERSION: "20"
+  VERCEL_ORG_ID: "${{ secrets.VERCEL_ORG_ID }}"
+  VERCEL_PROJECT_ID: "${{ secrets.VERCEL_PROJECT_ID }}"
+  RAILWAY_TEAM_ID: "${{ secrets.RAILWAY_TEAM_ID }}"
+  
+secrets:
+  - VERCEL_TOKEN: "Get from https://vercel.com/account/tokens"
+  - VERCEL_ORG_ID: "From Vercel project settings"
+  - VERCEL_PROJECT_ID: "From Vercel project settings"
+  - RAILWAY_TOKEN: "Get from https://railway.app/account/tokens"
+  - ANTHROPIC_API_KEY: "Your API key"
+  - OPENAI_API_KEY: "Your API key"

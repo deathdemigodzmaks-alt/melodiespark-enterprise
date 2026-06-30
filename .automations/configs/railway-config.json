@@ -1,0 +1,35 @@
+{
+  "services": [
+    {
+      "name": "api",
+      "dockerfile": "MelodieSpark/apps/api/Dockerfile",
+      "startCommand": "npm run start",
+      "environment": {
+        "NODE_ENV": "production",
+        "PORT": "3001"
+      },
+      "healthCheck": {
+        "path": "/health",
+        "interval": 30000,
+        "timeout": 10000
+      },
+      "autoDeploy": true,
+      "region": "us-west"
+    },
+    {
+      "name": "database",
+      "image": "postgres:16-alpine",
+      "environment": {
+        "POSTGRES_DB": "melodiespark",
+        "POSTGRES_USER": "melodiespark"
+      }
+    },
+    {
+      "name": "cache",
+      "image": "redis:7-alpine",
+      "environment": {
+        "REDIS_MAXMEMORY": "256mb"
+      }
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="{{ settings.color_primary }}">
+  
+  <link rel="canonical" href="{{ canonical_url }}">
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+  {%- endif -%}
+  
+  {%- unless settings.heading_font.system? -%}
+    <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    <link rel="preload" as="font" href="{{ settings.heading_font | font_url }}" type="font/woff2" crossorigin>
+  {%- endunless -%}
+  
+  {{ 'base.css' | asset_url | stylesheet_tag }}
+  {{ 'melodiespark.css' | asset_url | stylesheet_tag }}
+  
+  {%- if template == 'product' -%}
+    {{ 'product.css' | asset_url | stylesheet_tag }}
+  {%- endif -%}
+  
+  <title>
+    {%- if page_title -%}
+      {{ page_title }}
+      {%- if current_tags -%}
+        {%- assign meta_tags = current_tags | join: ', ' -%}
+        &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}
+      {%- endif -%}
+      {%- if current_page != 1 -%}
+        &ndash; {{ 'general.meta.page' | t: page: current_page }}
+      {%- endif -%}
+    {%- else -%}
+      {{ shop.name }}
+    {%- endif -%}
+  </title>
+  
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+  
+  {% render 'meta-tags' %}
+  
+  {{ content_for_header }}
+  
+  <script>
+    document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+    window.theme = {
+      moneyFormat: {{ shop.money_format | json }},
+      cartCount: {{ cart.item_count }}
+    };
+  </script>
+  
+  <!-- Stripe.js for real payment processing -->
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    window.stripePublicKey = '{{ settings.stripe_publishable_key }}';
+  </script>
+</head>
+
+<body class="template-{{ template | replace: '.', ' ' | handle }}">
+  <a class="skip-to-content-link visually-hidden" href="#MainContent">
+    {{ "accessibility.skip_to_text" | t }}
+  </a>
+  
+  {% sections 'header-group' %}
+  
+  <main id="MainContent" class="main-content" role="main" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+  
+  {% sections 'footer-group' %}
+  
+  <!-- Crypto Price Widget -->
+  {% if settings.enable_crypto_prices %}
+    {% render 'crypto-prices' %}
+  {% endif %}
+  
+  <!-- Karma Widget -->
+  {% if settings.enable_karma_widget %}
+    {% render 'karma-widget' %}
+  {% endif %}
+  
+  <!-- Bot Performance Widget -->
+  {% if settings.enable_bot_performance %}
+    {% render 'bot-performance' %}
+  {% endif %}
+  
+  {{ 'melodiespark.js' | asset_url | script_tag }}
+  {{ 'crypto-checkout.js' | asset_url | script_tag }}
+  {{ 'karma-tracker.js' | asset_url | script_tag }}
+  {{ 'bot-live-data.js' | asset_url | script_tag }}
+  
+  {% if settings.enable_stripe_elements %}
+    <script>
+      // Initialize Stripe for real payments
+      const stripe = Stripe(window.stripePublicKey);
+      window.stripe = stripe;
+    </script>
+  {% endif %}
+</body>
+</html>

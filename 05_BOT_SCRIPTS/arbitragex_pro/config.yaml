@@ -1,0 +1,108 @@
+# ArbitrageX Pro Configuration
+# REAL TRADING BOT - Connects to actual exchanges for real revenue generation
+
+# Exchange API Configuration
+# IMPORTANT: Use real API keys from your exchange accounts
+exchanges:
+  - name: binance
+    api_key: "${BINANCE_API_KEY}"  # Set environment variable
+    api_secret: "${BINANCE_API_SECRET}"  # Set environment variable
+    base_url: "https://api.binance.com"
+    websocket_url: "wss://stream.binance.com:9443"
+    testnet: false  # Set to true for paper trading first
+
+  - name: coinbase
+    api_key: "${COINBASE_API_KEY}"
+    api_secret: "${COINBASE_API_SECRET}"
+    base_url: "https://api.exchange.coinbase.com"
+    websocket_url: "wss://ws-feed.exchange.coinbase.com"
+    testnet: false
+
+  - name: kraken
+    api_key: "${KRAKEN_API_KEY}"
+    api_secret: "${KRAKEN_API_SECRET}"
+    base_url: "https://api.kraken.com"
+    testnet: false
+
+  - name: bybit
+    api_key: "${BYBIT_API_KEY}"
+    api_secret: "${BYBIT_API_SECRET}"
+    base_url: "https://api.bybit.com"
+    testnet: false
+
+# Trading Parameters
+trading:
+  min_spread: 0.005  # 0.5% minimum spread to execute
+  min_profit: 10  # $10 minimum profit per trade
+  max_position: 1000  # $1000 maximum position size
+  fee_rate: 0.001  # 0.1% fee per trade (adjust per exchange)
+  slippage_tolerance: 0.002  # 0.2% slippage tolerance
+
+# Symbols to Monitor
+symbols:
+  - "BTC/USDT"
+  - "ETH/USDT"
+  - "ETH/BTC"
+  - "LTC/USDT"
+  - "XRP/USDT"
+  - "ADA/USDT"
+  - "DOT/USDT"
+  - "SOL/USDT"
+  - "MATIC/USDT"
+  - "AVAX/USDT"
+
+# Risk Management
+risk_management:
+  max_daily_trades: 50
+  max_daily_loss: 500  # $500 maximum daily loss
+  max_open_positions: 5
+  position_timeout: 300  # 5 minutes to complete arbitrage
+  emergency_shutdown: true
+
+# Notifications
+notifications:
+  telegram:
+    enabled: true
+    bot_token: "${TELEGRAM_BOT_TOKEN}"
+    chat_id: "${TELEGRAM_CHAT_ID}"
+  
+  discord:
+    enabled: false
+    webhook_url: "${DISCORD_WEBHOOK_URL}"
+  
+  email:
+    enabled: true
+    smtp_server: "smtp.gmail.com"
+    smtp_port: 587
+    email: "${NOTIFICATION_EMAIL}"
+    password: "${EMAIL_PASSWORD}"
+
+# Logging
+logging:
+  level: "INFO"
+  file: "arbitragex_pro.log"
+  max_size: 10485760  # 10MB
+  backup_count: 5
+
+# Database (for tracking trades and profits)
+database:
+  type: "sqlite"
+  path: "arbitragex_pro.db"
+  # Alternative: PostgreSQL
+  # type: "postgresql"
+  # host: "localhost"
+  # port: 5432
+  # database: "arbitragex"
+  # username: "${DB_USERNAME}"
+  # password: "${DB_PASSWORD}"
+
+# Performance Monitoring
+monitoring:
+  enabled: true
+  prometheus_port: 9090
+  metrics:
+    - "total_profit"
+    - "total_trades"
+    - "success_rate"
+    - "avg_execution_time"
+    - "opportunities_found"
