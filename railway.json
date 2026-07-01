@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "nixpacks"
+  },
+  "deploy": {
+    "numReplicas": 1,
+    "startCommand": "cd apps/api && npm install && npm run build && npm start"
+  }
+}
