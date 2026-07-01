@@ -1,0 +1,7 @@
+{
+  "name": "@melodiespark/service-analytics",
+  "version": "1.0.0",
+  "description": "Analytics service module",
+  "private": true,
+  "main": "./dist/index.js"
+}

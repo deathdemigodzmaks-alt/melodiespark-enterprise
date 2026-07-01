@@ -1,0 +1,7 @@
+{
+  "name": "@melodiespark/service-ai",
+  "version": "1.0.0",
+  "description": "AI service module",
+  "private": true,
+  "main": "./dist/index.js"
+}

@@ -235,9 +235,9 @@ backups/
 *-backup/
 
 # ============================================
-# Lock Files (optional - uncomment if needed)
+# Lock Files (for pnpm workspaces - required)
 # ============================================
-# pnpm-lock.yaml
+# pnpm-lock.yaml is committed for reproducible builds
 # package-lock.json
 # yarn.lock
 

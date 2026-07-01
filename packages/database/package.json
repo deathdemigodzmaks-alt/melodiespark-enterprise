@@ -1,19 +1,24 @@
 {
   "name": "@melodiespark/database",
   "version": "1.0.0",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "description": "Database layer with Prisma ORM",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "prisma": "prisma",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev",
-    "db:generate": "prisma generate",
-    "db:seed": "node prisma/seed.js"
+    "build": "tsc",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:push": "prisma db push",
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
-    "@prisma/client": "^5.7.0"
+    "@prisma/client": "^5.8.0",
+    "dotenv": "^16.3.1"
   },
   "devDependencies": {
-    "prisma": "^5.7.0"
+    "@types/node": "^20.10.6",
+    "prisma": "^5.8.0",
+    "typescript": "^5.3.3"
   }
 }

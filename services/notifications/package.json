@@ -1,0 +1,7 @@
+{
+  "name": "@melodiespark/service-notifications",
+  "version": "1.0.0",
+  "description": "Notifications service module",
+  "private": true,
+  "main": "./dist/index.js"
+}
